@@ -1,7 +1,7 @@
 var __origin = {
-    __state : {},
+    __state: {},
     __objs: {},
-    create: function(id){
+    create: function(id) {
         this.__state[id] = {
             id,
             depends: [],
@@ -9,26 +9,27 @@ var __origin = {
             resonants: [],
         }
 
-        return this.__state[id];
+        return this.__state[id]
     },
 
     state: function(id) {
-        if(typeof id == 'undefined') return this.create(id)
-        if(typeof this.__state[id] == 'undefined') return this.create(id)
+        if (typeof id == 'undefined') return this.create(id)
+        if (typeof this.__state[id] == 'undefined') return this.create(id)
         return this.__state[id]
     },
 
     obj: function(id) {
-        if(typeof id == 'undefined') return false
-        if(typeof this.__objs[id] == 'undefined') return false
+        if (typeof id == 'undefined') return false
+        if (typeof this.__objs[id] == 'undefined') return false
 
-        if(typeof this.__objs[id].__zen == 'undefined'){
+        if (typeof this.__objs[id].__zen == 'undefined') {
             return {
                 base: true,
-                getter: Object.getOwnPropertyDescriptor( this.__objs, id).get,
-                setter: Object.getOwnPropertyDescriptor( this.__objs, id).set,
+                getter: Object.getOwnPropertyDescriptor(this.__objs, id).get,
+                setter: Object.getOwnPropertyDescriptor(this.__objs, id).set,
             }
-        }else{
+        }
+        else {
             return {
                 base: false,
                 obj: this.__objs[id]
@@ -36,14 +37,14 @@ var __origin = {
         }
     },
 
-    formBase: function(name, getter, setter){
-        if(getter && setter){
-            Object.defineProperty( this.__objs, name, {
+    formBase: function(name, getter, setter) {
+        if (getter && setter) {
+            Object.defineProperty(this.__objs, name, {
                 get: getter,
                 set: setter,
                 enumerable: true,
                 configurable: false
-            });
+            })
 
             return this.__objs[name]
         }
@@ -59,25 +60,25 @@ var __origin = {
     },
 
     resonant: function(name, value) {
-        Object.keys(this.__state).forEach( key => {
-            if(this.__state[key] &&
-            this.__state[key].depends.length > 0 &&
-            this.__state[key].depends.indexOf(name) > -1 )
-            {
-                this.__state[key].resonants.forEach( resonant => resonant(value) )
+        Object.keys(this.__state).forEach(key => {
+            if (this.__state[key] &&
+                this.__state[key].depends.length > 0 &&
+                this.__state[key].depends.indexOf(name) > -1) {
+                this.__state[key].resonants.forEach(resonant => resonant(value))
             }
         })
     }
 }
 
-function zen(name, objs){
-    if(!name || typeof name !== 'string') return;
-    if(!objs) {
+function zen(name, objs) {
+    if (!name || typeof name !== 'string') return
+    if (!objs) {
         let obj = __origin.obj(name)
-        if(obj) {
-            if(obj.base){
+        if (obj) {
+            if (obj.base) {
                 return obj.getter()
-            }else{
+            }
+            else {
                 return obj.obj
             }
         }
@@ -85,35 +86,39 @@ function zen(name, objs){
 
     let state = __origin.state(name)
 
-    if(typeof objs == 'object'){
-        if(objs.__zen){
-            return objs;
-        }else{
-            let dimension = 1, zenobj = __origin.form(name)
-            //multi dimension objs
-            Object.keys(objs).forEach( objkey => {
+    if (typeof objs == 'object') {
+        if (objs.__zen) {
+            return objs
+        }
+        else {
+            let dimension = 1,
+                zenobj = __origin.form(name)
+                //multi dimension objs
+            Object.keys(objs).forEach(objkey => {
                 let obj = objs[objkey]
                 let __obj = __origin.obj(obj)
 
-                if(__obj !== false){
-                    if( !__obj.base ) {
+                if (__obj !== false) {
+                    if (!__obj.base) {
                         state.depends.push(obj.__stateId)
                         dimension += obj.__dimension
                         zenobj[objkey] = obj
-                    }else{
+                    }
+                    else {
                         //define object property
                         state.depends.push(obj)
-                        Object.defineProperty( zenobj, obj, {
+                        Object.defineProperty(zenobj, obj, {
                             get: __obj.getter,
                             set: __obj.setter,
                             enumerable: true,
                             configurable: false
-                        });
+                        })
                     }
-                }else{
+                }
+                else {
                     //not an zen instance
-                    console.log('not an zen object name', obj, __obj)
-                    console.log(__origin.__objs)
+                    // console.log('not an zen object name', obj, __obj)
+                    // console.log(__origin.__objs)
                 }
 
             })
@@ -137,9 +142,9 @@ function zen(name, objs){
             state.stacks.push(value)
 
             //direct
-            state.resonants.forEach( resonant => {
+            state.resonants.forEach(resonant => {
                 resonant(value)
-            } )
+            })
 
             //chanel / boarcasting
             __origin.resonant(name, value)
@@ -151,5 +156,4 @@ function zen(name, objs){
     return zenobj
 }
 
-export default zen
-
+module.exports = zen

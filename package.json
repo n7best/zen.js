@@ -1,18 +1,38 @@
 {
-  "name": "zenjs",
+  "name": "zen-js",
   "version": "0.0.1",
-  "description": "code like zen",
-  "main": "index.js",
+  "description": "State managemen like natural",
+  "browser": "dist/redux.js",
+  "main": "lib/index.js",
+  "module": "lib/index.js",
   "dependencies": {
     "babel-cli": "^6.18.0"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
-    "babel-preset-latest": "^6.16.0"
+    "babel-core": "^6.20.0",
+    "babel-loader": "^6.2.9",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.18.0",
+    "babel-preset-latest": "^6.16.0",
+    "cross-env": "^3.1.3",
+    "eslint": "^3.12.1",
+    "eslint-config-standard": "^6.2.1",
+    "eslint-plugin-promise": "^3.4.0",
+    "eslint-plugin-react": "^6.8.0",
+    "eslint-plugin-standard": "^2.0.1",
+    "rimraf": "^2.5.4",
+    "webpack": "^1.14.0",
+    "webpack-dev-server": "^1.16.2"
   },
   "scripts": {
-    "build": "babel src -d lib",
-    "test": "babel example -d test && node ./test/counter.js"
+    "clean": "rimraf lib dist coverage",
+    "lint": "eslint src",
+    "build:es": "cross-env BABEL_ENV=es babel src -d lib",
+    "build:umd": "cross-env BABEL_ENV=commonjs NODE_ENV=development webpack src/index.js dist/zen.js",
+    "build:umd:min": "cross-env BABEL_ENV=commonjs NODE_ENV=production webpack src/index.js dist/zen.min.js",
+    "build": "npm run build:es && npm run build:umd && npm run build:umd:min",
+    "test": "babel example -d test && node ./test/counter.js",
+    "prepublish": "npm run clean && npm run lint && npm run build"
   },
   "repository": {
     "type": "git",
