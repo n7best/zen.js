@@ -1,0 +1,30 @@
+{
+  "name": "zenjs",
+  "version": "0.0.1",
+  "description": "code like zen",
+  "main": "index.js",
+  "dependencies": {
+    "babel-cli": "^6.18.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-preset-latest": "^6.16.0"
+  },
+  "scripts": {
+    "build": "babel src -d lib",
+    "test": "babel example -d test && node ./test/counter.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/n7best/zen.js.git"
+  },
+  "keywords": [
+    "zenjs"
+  ],
+  "author": "n7best",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/n7best/zen.js/issues"
+  },
+  "homepage": "https://github.com/n7best/zen.js#readme"
+}
