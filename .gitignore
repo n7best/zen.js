@@ -1,0 +1,6 @@
+lib
+test
+.c9
+node_modules
+npm-debug.log
+.DS_Store
