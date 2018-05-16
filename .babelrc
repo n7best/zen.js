@@ -1,5 +1,5 @@
 {
-  "presets": ["latest"],
+  "presets": ["hahha"],
   "env": {
     "commonjs": {
       "plugins": [
